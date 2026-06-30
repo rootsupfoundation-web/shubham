@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RootsUp Admin Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#1A3A7A;--amber:#F5A623;--green:#3A8C4A;--mid:#6B7280;--border:#E2DDD6;--red:#DC2626}
+body{font-family:'Inter',sans-serif;background:#F1F5F9;color:#1C1C1C;min-height:100vh}
+
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--navy);padding:1rem}
+.login-box{background:#fff;padding:2.5rem;border-radius:6px;width:100%;max-width:380px;text-align:center}
+.login-brand{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--navy);margin-bottom:0.3rem}
+.login-brand span{color:var(--amber)}
+.login-box h2{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--navy);margin:1rem 0 0.3rem}
+.login-box p{font-size:0.85rem;color:var(--mid);margin-bottom:2rem}
+.login-field{text-align:left;margin-bottom:1rem}
+.login-field label{display:block;font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--navy);margin-bottom:0.35rem}
+.login-field input{width:100%;padding:0.75rem 1rem;border:1px solid var(--border);border-radius:3px;font-size:0.9rem;outline:none;transition:border-color 0.2s}
+.login-field input:focus{border-color:var(--navy)}
+.login-btn{width:100%;padding:0.9rem;background:var(--navy);color:#fff;border:none;border-radius:3px;font-size:0.9rem;font-weight:600;cursor:pointer;margin-top:0.5rem;transition:opacity 0.2s}
+.login-btn:hover{opacity:0.88}
+.login-error{display:none;color:var(--red);font-size:0.82rem;margin-top:0.75rem}
+
+#adminPanel{display:none}
+.admin-nav{background:var(--navy);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;position:sticky;top:0;z-index:100}
+.admin-nav-logo{font-family:'Playfair Display',serif;font-weight:900;color:#fff;font-size:1.1rem;display:flex;align-items:center;gap:0.75rem}
+.admin-nav-logo span{color:var(--amber)}
+.admin-tag{font-size:0.7rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.45)}
+.admin-nav-right{display:flex;align-items:center;gap:1rem}
+.admin-nav-right a{font-size:0.8rem;color:rgba(255,255,255,0.6);text-decoration:none;transition:color 0.2s}
+.admin-nav-right a:hover{color:#fff}
+.logout-btn{background:rgba(255,255,255,0.1);border:none;color:rgba(255,255,255,0.8);padding:0.4rem 1rem;border-radius:3px;font-size:0.8rem;cursor:pointer;transition:background 0.2s}
+.logout-btn:hover{background:rgba(255,255,255,0.2)}
+
+.admin-body{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 60px)}
+.sidebar{background:#fff;border-right:1px solid var(--border);padding:1.5rem 0;overflow-y:auto}
+.sidebar-section{font-size:0.68rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--mid);padding:0 1.5rem;margin:1.5rem 0 0.5rem}
+.sidebar-link{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 1.5rem;font-size:0.84rem;color:#374151;cursor:pointer;transition:background 0.15s,color 0.15s;border-left:3px solid transparent}
+.sidebar-link:hover{background:#F8FAFC;color:var(--navy)}
+.sidebar-link.active{background:#EEF2FF;color:var(--navy);border-left-color:var(--amber);font-weight:600}
+
+.admin-main{padding:2rem;overflow-y:auto}
+.page{display:none}.page.active{display:block}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.3rem}
+.back-btn{background:#fff;border:1px solid var(--border);color:var(--navy);padding:0.5rem 1rem;border-radius:4px;font-size:0.8rem;cursor:pointer;font-weight:600;transition:background 0.2s;display:flex;align-items:center;gap:0.4rem}
+.back-btn:hover{background:#F1F5F9}
+.page-title{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--navy)}
+.page-sub{font-size:0.84rem;color:var(--mid);margin:0.3rem 0 2rem}
+
+.card{background:#fff;border:1px solid var(--border);border-radius:6px;padding:1.5rem;margin-bottom:1.5rem}
+.card-title{font-size:0.85rem;font-weight:600;color:var(--navy);margin-bottom:1.2rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border)}
+.field{margin-bottom:1rem}
+.field label{display:block;font-size:0.72rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#374151;margin-bottom:0.35rem}
+.field input,.field select,.field textarea{width:100%;padding:0.65rem 0.9rem;border:1px solid var(--border);border-radius:3px;font-size:0.88rem;font-family:inherit;outline:none;transition:border-color 0.2s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--navy)}
+.field textarea{resize:vertical;min-height:80px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.field-hint{font-size:0.76rem;color:var(--mid);margin-top:0.35rem}
+.save-btn{background:var(--navy);color:#fff;border:none;padding:0.75rem 1.5rem;border-radius:3px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:opacity 0.2s;display:inline-flex;align-items:center;gap:0.5rem}
+.save-btn:hover{opacity:0.88}
+.save-btn.green{background:var(--green)}
+.save-btn.amber{background:var(--amber);color:var(--navy)}
+.toast{display:none;position:fixed;bottom:2rem;right:2rem;background:#1C1C1C;color:#fff;padding:0.75rem 1.5rem;border-radius:4px;font-size:0.85rem;z-index:999}
+
+.team-editor-row{background:#F8FAFC;border:1px solid var(--border);border-radius:5px;padding:1rem;display:grid;grid-template-columns:80px 1fr 1fr auto;gap:1rem;align-items:center;margin-bottom:1rem}
+.team-photo-preview{width:60px;height:60px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:var(--amber);overflow:hidden;border:2px solid var(--border);cursor:pointer}
+.team-photo-preview img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.team-photo-upload{display:none}
+.photo-upload-label{display:block;width:100%;text-align:center;font-size:0.65rem;color:var(--mid);margin-top:0.3rem;cursor:pointer}
+.team-col input{width:100%;padding:0.55rem 0.8rem;border:1px solid var(--border);border-radius:3px;font-size:0.85rem;outline:none}
+.team-col input:focus{border-color:var(--navy)}
+.del-btn{background:none;border:1px solid #FCA5A5;color:var(--red);width:32px;height:32px;border-radius:3px;cursor:pointer;font-size:1rem}
+.del-btn:hover{background:#FEE2E2}
+.add-btn{background:#EEF2FF;border:1px dashed #A5B4FC;color:var(--navy);padding:0.75rem;border-radius:5px;width:100%;cursor:pointer;font-size:0.85rem;font-weight:600;transition:background 0.2s}
+.add-btn:hover{background:#E0E7FF}
+
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:6px;padding:1.25rem;text-align:center}
+.stat-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--navy)}
+.stat-lbl{font-size:0.75rem;color:var(--mid);margin-top:0.3rem;letter-spacing:0.05em;text-transform:uppercase}
+.warn-box{background:#FFFBEB;border:1px solid #FDE68A;border-radius:4px;padding:1rem;font-size:0.83rem;color:#92400E;margin-bottom:1rem}
+
+.blog-editor-row{background:#F8FAFC;border:1px solid var(--border);border-radius:5px;padding:1rem;margin-bottom:1rem;display:flex;gap:1rem;align-items:flex-start}
+.blog-thumb{width:70px;height:70px;border-radius:4px;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:1.5rem;overflow:hidden;flex-shrink:0;cursor:pointer}
+.blog-thumb img{width:100%;height:100%;object-fit:cover}
+.blog-edit-fields{flex:1;display:flex;flex-direction:column;gap:0.5rem}
+.blog-edit-fields input,.blog-edit-fields select{padding:0.5rem 0.7rem;border:1px solid var(--border);border-radius:3px;font-size:0.83rem}
+.blog-edit-fields textarea{padding:0.5rem 0.7rem;border:1px solid var(--border);border-radius:3px;font-size:0.83rem;resize:vertical;min-height:60px;font-family:inherit}
+
+.icon-picker{display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:0.3rem}
+.icon-opt{width:32px;height:32px;border:1px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;background:#fff}
+.icon-opt.sel{border-color:var(--navy);background:#EEF2FF}
+
+@media(max-width:768px){
+  .admin-body{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .team-editor-row{grid-template-columns:60px 1fr auto}
+  .field-row{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr}
+  .blog-editor-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-brand">Roots<span>Up</span></div>
+    <h2>Admin Panel</h2>
+    <p>RootsUp Foundation · Restricted Access</p>
+    <div class="login-field"><label>Username / Email</label><input type="email" id="loginEmail" placeholder="email@example.com" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <div class="login-field"><label>Password</label><input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="login-btn" onclick="doLogin()">Login →</button>
+    <p class="login-error" id="loginError">Incorrect username or password.</p>
+  </div>
+</div>
+
+<div id="adminPanel">
+  <div class="admin-nav">
+    <div class="admin-nav-logo">Roots<span>Up</span> <span class="admin-tag">Admin Panel</span></div>
+    <div class="admin-nav-right">
+      <a href="index.html" target="_blank">↗ View Website</a>
+      <button class="logout-btn" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="admin-body">
+    <div class="sidebar">
+      <div class="sidebar-section">Dashboard</div>
+      <div class="sidebar-link active" data-page="dashboard" onclick="showPage('dashboard')">📊 Dashboard</div>
+
+      <div class="sidebar-section">Website Pages</div>
+      <div class="sidebar-link" data-page="hero" onclick="showPage('hero')">🏠 Hero Section</div>
+      <div class="sidebar-link" data-page="focus" onclick="showPage('focus')">🎯 Focus Areas</div>
+      <div class="sidebar-link" data-page="fellowship" onclick="showPage('fellowship')">🎓 Fellowship</div>
+      <div class="sidebar-link" data-page="mission" onclick="showPage('mission')">📖 Who We Are</div>
+      <div class="sidebar-link" data-page="team" onclick="showPage('team')">👥 Team Members</div>
+      <div class="sidebar-link" data-page="blog" onclick="showPage('blog')">📝 Publications & Blog</div>
+      <div class="sidebar-link" data-page="payments" onclick="showPage('payments')">💳 Bank & UPI Details</div>
+      <div class="sidebar-link" data-page="contact" onclick="showPage('contact')">📍 Contact & Social</div>
+
+      <div class="sidebar-section">Settings</div>
+      <div class="sidebar-link" data-page="admins" onclick="showPage('admins')">🔐 Admin Accounts</div>
+      <div class="sidebar-link" data-page="password" onclick="showPage('password')">🔑 Change Password</div>
+    </div>
+
+    <div class="admin-main">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-title">Dashboard</div>
+        <div class="page-sub">Welcome back! Here's a quick overview.</div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-num" id="dash-visitors">0</div><div class="stat-lbl">Total Visitors</div></div>
+          <div class="stat-card"><div class="stat-num" id="dash-team">0</div><div class="stat-lbl">Team Members</div></div>
+          <div class="stat-card"><div class="stat-num" id="dash-blogs">0</div><div class="stat-lbl">Published Posts</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">⚡ Quick Actions</div>
+          <div style="display:flex;gap:1rem;flex-wrap:wrap">
+            <button class="save-btn" onclick="showPage('team')">👥 Edit Team</button>
+            <button class="save-btn amber" onclick="showPage('payments')">💳 Bank / UPI</button>
+            <button class="save-btn green" onclick="showPage('blog')">📝 Write a Post</button>
+            <button class="save-btn" style="background:#7B4FD4" onclick="window.open('index.html','_blank')">↗ View Live Site</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">📋 How to use this panel</div>
+          <ul style="font-size:0.85rem;color:var(--mid);line-height:2;padding-left:1.2rem">
+            <li>Every section of the website can be edited from the sidebar on the left</li>
+            <li>Click "← Back to Dashboard" anytime to return to this page</li>
+            <li>All changes save instantly and appear on the live website immediately</li>
+            <li>Only Main Admin can add or remove other admin accounts</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- HERO -->
+      <div class="page" id="page-hero">
+        <div class="page-header"><div><div class="page-title">Hero Section</div><div class="page-sub" style="margin-bottom:0">Main headline and intro text on homepage.</div></div><button class="back-btn" onclick="showPage('dashboard')">← Back</button></div>
+        <div class="card">
+          <div class="field"><label>Eyebrow Text (small text above headline)</label><input type="text" id="heroEyebrow" value="Section 8 NGO · Raipur, Chhattisgarh"></div>
+          <div class="field"><label>Description Text (below headline)</label><textarea id="heroDesc">We work in villages, schools, and community centres — not from offices. RootsUp Foundation is built by people who have sat with families, understood their realities, and chosen to stay. Education, health, livelihoods, women's rights, and the environment — because in a community, nothing works in isolation.</textarea></div>
+          <div class="field"><label>Background Image (optional)</label>
+            <input type="file" accept="image/*" onchange="uploadImg(this,'heroBgData','heroBgPreviewImg')">
+            <p class="field-hint">A wide landscape photo works best for the hero background.</p>
+          </div>
+          <img id="heroBgPreviewImg" style="display:none;max-width:200px;margin-top:0.5rem;border-radius:4px;border:1px solid var(--border)">
+          <br><br>
+          <button class="save-btn" onclick="saveHero()">✓ Save Hero Section</button>
+        </div>
+      </div>
+
+      <!-- FOCUS -->
+      <div class="page" id="page-focus">
+        <div class="page-header"><div><div class="page-title">Focus Areas</div><div class="page-sub" style="margin-bottom:0">Edit the 6 focus area cards.</div></div><button class="back-btn" onclick="showPage('dashboard')">← Back</button></div>
+        <div id="focusEditorList"></div>
+        <button class="save-btn" onclick="saveFocus()">✓ Save Focus Areas</button>
+      </div>
+
+      <!-- FELLOWSHIP -->
+      <div class="page" id="page-fellowship">
+        <div class="page-header"><div><div class="page-title">Sarthi Fellowship</div><div class="page-sub" style="margin-bottom:0">Edit the fellowship section content.</div></div><button class="back-btn" onclick="showPage('dashboard')">← Back</button></div>
+        <div class="card">
+          <div class="field"><label>Section Title</label><input type="text" id="fellTitle" value="RootsUp Sarthi Fellowship"></div>
+          <div class="field"><label>Description</label><textarea id="fellDesc">A year-long immersive fellowship for undergraduate students who want to work at the grassroots. Open to passionate students from across India ready to lead change from within their communities.</textarea></div>
+          <button class="save-btn" onclick="saveFellowship()">✓ Save Fellowship Section</button>
+        </div>
+      </div>
+
+      <!-- MISSION -->
+      <div class="page" id="page-mission">
+        <div class="page-header"><div><div class="page-title">Who We Are</div><div class="page-sub" style="margin-bottom:0">Edit the mission/about section.</div></div><button class="back-btn" onclick="showPage('dashboard')">← Back</button></div>
+        <div class="card">
+          <div class="field"><label>Paragraph 1</label><textarea id="missionP1">RootsUp Foundation is a Section 8 Not-for-Profit registered in Raipur, Chhattisgarh. We are practitioners first — our team has worked inside rural schools and community meetings long before we registered as an NGO.</textarea></div>
+          <div class="field"><label>Paragraph 2</label><textarea id="missionP2">We believe the most durable development happens when communities are the architects of their own progress — and our role is to walk alongside them, not ahead of them.</textarea></div>
+          <button class="save-btn" onclick="saveMission()">✓ Save Who We Are</button>
+        </div>
+      </div>
+
+      <!-- TEAM -->
+      <div class="page" id="page-team">
+        <div class="page-header"><div><div class="page-title">Team Members</div><div class="page-sub" style="margin-bottom:0">Add, edit, remove team members and upload photos.</div></div><button class="back-btn" onclick="showPage('dashboard')">← Back</button></div>
+        <div class="card">
+          <div class="card-title">👥 Team Members</div>
+          <div id="teamEditorList"></div>
+          <button class="add-btn" onclick="addTeamMember()">+ Add Team Member</button>
+          <br><br>
+          <button class="save-btn green" onclick="saveTeam()">✓ Save Team</button>
+        </div>
+      </div>
+
+      <!-- BLOG -->
+      <div class="page" id="page-blog">
+        <div class="page-header"><div><div class="page-title">Publications & Blog</div><div class="page-sub" style="margin-bottom:0">Write and publish posts that appear on the Blog page.</div></div><button class="back-btn" onclick="showPage('dashboard')">← Back</button></div>
+        <div class="card">
+          <div class="card-title">📝 Published Posts</div>
+          <div id="blogEditorList"></div>
+          <button class="add-btn" onclick="addBlog()">+ Add New Post</button>
+          <br><br>
+          <button class="save-btn green" onclick="saveBlogs()">✓ Save All Posts</button>
+        </div>
+      </div>
+
+      <!-- PAYMENTS -->
+      <div class="page" id="page-payments">
+        <div class="page-header"><div><div class="page-title">Bank & UPI Details</div><div class="page-sub" style="margin-bottom:0">Shown in the "Support Us" popup.</div></div><button class="back-btn" onclick="showPage('dashboard')">← Back</button></div>
+        <div class="card">
+          <div class="card-title">📱 UPI Details</div>
+          <div class="field"><label>UPI ID</label><input type="text" id="upiId" placeholder="e.g. rootsup@okaxis"></div>
+          <div class="field"><label>QR Code Image</label><input type="file" accept="image/*" onchange="uploadImg(this,'qrData','qrPreviewImg')"></div>
+          <img id="qrPreviewImg" style="display:none;width:120px;margin-top:0.5rem;border:1px solid var(--border);border-radius:4px">
+          <br><br>
+          <button class="save-btn amber" onclick="saveUPI()">✓ Save UPI Details</button>
+        </div>
+        <div class="card">
+          <div class="card-title">🏦 Bank Account Details</div>
+          <div class="field-row"><div class="field"><label>Account Name</label><input type="text" id="bName"></div><div class="field"><label>Account Number</label><input type="text" id="bAcc"></div></div>
+          <div class="field-row"><div class="field"><label>IFSC Code</label><input type="text" id="bIfsc"></div><div class="field"><label>Bank Name</label><input type="text" id="bBank"></div></div>
+          <div class="field-row"><div class="field"><label>Branch</label><input type="text" id="bBranch"></div><div class="field"><label>Account Type</label><select id="bType"><option>Current</option><option>Savings</option></select></div></div>
+          <button class="save-btn" onclick="saveBank()">✓ Save Bank Details</button>
+        </div>
+      </div>
+
+      <!-- CONTACT -->
+      <div class="page" id="page-contact">
+        <div class="page-header"><div><div class="page-title">Contact & Social Media</div><div class="page-sub" style="margin-bottom:0">Address, phone, email, and social media links shown in footer.</div></div><button class="back-btn" onclick="showPage('dashboard')">← Back</button></div>
+        <div class="card">
+          <div class="card-title">📍 Contact Details</div>
+          <div class="field"><label>Office Address</label><textarea id="contactAddress" placeholder="e.g. RootsUp Foundation, Raipur, Chhattisgarh, 492001"></textarea></div>
+          <div class="field-row">
+            <div class="field"><label>Phone Number</label><input type="tel" id="contactPhone" placeholder="+91 98765 43210"></div>
+            <div class="field"><label>Email Address</label><input type="email" id="contactEmail" placeholder="rootsupfoundation@gmail.com"></div>
+          </div>
+          <div class="field"><label>Footer Tagline</label><textarea id="footerTaglineInput">Rooted in community. Rising together. Working across education, health, environment, women empowerment, and rural development in Central India.</textarea></div>
+          <button class="save-btn" onclick="saveContact()">✓ Save Contact Details</button>
+        </div>
+        <div class="card">
+          <div class="card-title">🔗 Social Media Links</div>
+          <div class="field"><label>LinkedIn URL</label><input type="text" id="socLinkedin" placeholder="https://linkedin.com/company/rootsup"></div>
+          <div class="field"><label>Instagram URL</label><input type="text" id="socInstagram" placeholder="https://instagram.com/rootsupfoundation"></div>
+          <div class="field"><label>Facebook URL</label><input type="text" id="socFacebook" placeholder="https://facebook.com/rootsupfoundation"></div>
+          <div class="field"><label>Twitter / X URL</label><input type="text" id="socTwitter" placeholder="https://x.com/rootsupfdn"></div>
+          <div class="field"><label>YouTube URL</label><input type="text" id="socYoutube" placeholder="https://youtube.com/@rootsupfoundation"></div>
+          <button class="save-btn amber" onclick="saveSocial()">✓ Save Social Links</button>
+        </div>
+      </div>
+
+      <!-- ADMINS -->
+      <div class="page" id="page-admins">
+        <div class="page-header"><div><div class="page-title">Admin Accounts</div><div class="page-sub" style="margin-bottom:0">Only Main Admin can add or remove admins.</div></div><button class="back-btn" onclick="showPage('dashboard')">← Back</button></div>
+        <div class="card">
+          <div class="card-title">🔐 Current Admin Accounts</div>
+          <div id="adminList" style="margin-bottom:1.5rem"></div>
+          <div class="card-title" style="margin-top:1.5rem">➕ Add New Admin</div>
+          <div class="field-row">
+            <div class="field"><label>Email / Username</label><input type="email" id="newAdminEmail" placeholder="newadmin@email.com"></div>
+            <div class="field"><label>Password</label><input type="password" id="newAdminPass" placeholder="Set a strong password"></div>
+          </div>
+          <button class="save-btn green" onclick="addAdmin()">+ Add Admin</button>
+        </div>
+      </div>
+
+      <!-- PASSWORD -->
+      <div class="page" id="page-password">
+        <div class="page-header"><div><div class="page-title">Change Password</div><div class="page-sub" style="margin-bottom:0">Change your admin login password.</div></div><button class="back-btn" onclick="showPage('dashboard')">← Back</button></div>
+        <div class="card">
+          <div class="warn-box">⚠️ After changing password, you'll be logged out automatically.</div>
+          <div class="field"><label>Current Password</label><input type="password" id="curPass"></div>
+          <div class="field"><label>New Password</label><input type="password" id="newPass"></div>
+          <div class="field"><label>Confirm New Password</label><input type="password" id="confPass"></div>
+          <button class="save-btn" onclick="changePassword()">✓ Change Password</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DEFAULT_ADMIN={email:'rootsupfoundation@gmail.com',password:'RootsUp12345',isMain:true};
+function getAdmins(){const s=JSON.parse(localStorage.getItem('ru_admins')||'null');return s||[DEFAULT_ADMIN]}
+function saveAdmins(a){localStorage.setItem('ru_admins',JSON.stringify(a))}
+
+function doLogin(){
+  const em=document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pw=document.getElementById('loginPass').value;
+  const found=getAdmins().find(a=>a.email.toLowerCase()===em&&a.password===pw);
+  if(found){
+    sessionStorage.setItem('ru_logged','1');sessionStorage.setItem('ru_current',found.email);
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('adminPanel').style.display='block';
+    initAdmin();
+  } else document.getElementById('loginError').style.display='block';
+}
+function doLogout(){
+  sessionStorage.removeItem('ru_logged');sessionStorage.removeItem('ru_current');
+  document.getElementById('adminPanel').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('loginEmail').value='';document.getElementById('loginPass').value='';
+}
+if(sessionStorage.getItem('ru_logged')==='1'){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('adminPanel').style.display='block';
+  window.addEventListener('DOMContentLoaded',initAdmin);
+}
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-link').forEach(l=>l.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const link=document.querySelector(`.sidebar-link[data-page="${id}"]`);
+  if(link)link.classList.add('active');
+  if(id==='dashboard')refreshDashboard();
+  window.scrollTo(0,0);
+}
+
+function initAdmin(){
+  refreshDashboard();loadHero();loadFocus();loadFellowship();loadMission();
+  renderTeamEditor();renderBlogEditor();loadPayments();loadContact();renderAdminList();
+}
+
+function refreshDashboard(){
+  document.getElementById('dash-visitors').textContent=(parseInt(localStorage.getItem('ru_visitors')||1241)).toLocaleString();
+  const team=JSON.parse(localStorage.getItem('ru_team')||'[]');
+  document.getElementById('dash-team').textContent=team.length||5;
+  const blogs=JSON.parse(localStorage.getItem('ru_blogs')||'[]');
+  document.getElementById('dash-blogs').textContent=blogs.length;
+}
+
+// generic image upload helper -> stores base64 in window var, shows preview
+let imgStore={};
+function uploadImg(input,storeKey,previewImgId){
+  if(input.files&&input.files[0]){
+    const r=new FileReader();
+    r.onload=e=>{imgStore[storeKey]=e.target.result;const img=document.getElementById(previewImgId);if(img){img.src=e.target.result;img.style.display='block'}};
+    r.readAsDataURL(input.files[0]);
+  }
+}
+
+// ── HERO ──
+function loadHero(){
+  const h=JSON.parse(localStorage.getItem('ru_hero')||'{}');
+  document.getElementById('heroEyebrow').value=h.eyebrow||'Section 8 NGO · Raipur, Chhattisgarh';
+  document.getElementById('heroDesc').value=h.desc||document.getElementById('heroDesc').value;
+  const bg=localStorage.getItem('ru_hero_bg');
+  if(bg){imgStore.heroBgData=bg;const img=document.getElementById('heroBgPreviewImg');img.src=bg;img.style.display='block'}
+}
+function saveHero(){
+  localStorage.setItem('ru_hero',JSON.stringify({eyebrow:document.getElementById('heroEyebrow').value,desc:document.getElementById('heroDesc').value}));
+  if(imgStore.heroBgData)localStorage.setItem('ru_hero_bg',imgStore.heroBgData);
+  showToast('✓ Hero section saved!');
+}
+
+// ── FOCUS ──
+let focusData=[];
+function loadFocus(){
+  focusData=JSON.parse(localStorage.getItem('ru_focus')||'null')||[
+    {icon:'📚',title:'Education',body:'Promoting quality, inclusive education — from foundational literacy to digital learning and school dropout reduction. Our programmes reach children and families who need it most.'},
+    {icon:'💊',title:'Health',body:'Health camps, nutrition awareness, maternal & child health, TB awareness, mental health support — bringing basic healthcare closer to the last mile.'},
+    {icon:'🌿',title:'Environment',body:'Tree plantation drives, waste management awareness, water conservation, and community-led ecological restoration.'},
+    {icon:'👩',title:'Women Empowerment',body:'Skill training, SHG formation, legal literacy, safety awareness, and leadership building.'},
+    {icon:'🌾',title:'Rural Development',body:'Livelihood training, sustainable agriculture, farmer producer organizations, and community governance.'},
+    {icon:'🎓',title:'Youth Leadership',body:'Through the Sarthi Fellowship, we invest in youth who want to lead from within.'}
+  ];
+  renderFocusEditor();
+}
+function renderFocusEditor(){
+  const c=document.getElementById('focusEditorList');c.innerHTML='';
+  focusData.forEach((f,i)=>{
+    const card=document.createElement('div');card.className='card';
+    card.innerHTML=`<div class="card-title">${f.icon} Focus Area ${i+1}</div>
+      <div class="field-row">
+        <div class="field"><label>Icon (emoji)</label><input value="${f.icon}" onchange="focusData[${i}].icon=this.value"></div>
+        <div class="field"><label>Title</label><input value="${f.title}" onchange="focusData[${i}].title=this.value"></div>
+      </div>
+      <div class="field"><label>Description</label><textarea onchange="focusData[${i}].body=this.value">${f.body}</textarea></div>`;
+    c.appendChild(card);
+  });
+}
+function saveFocus(){localStorage.setItem('ru_focus',JSON.stringify(focusData));showToast('✓ Focus areas saved!')}
+
+// ── FELLOWSHIP ──
+function loadFellowship(){
+  const f=JSON.parse(localStorage.getItem('ru_fellowship')||'{}');
+  if(f.title)document.getElementById('fellTitle').value=f.title;
+  if(f.desc)document.getElementById('fellDesc').value=f.desc;
+}
+function saveFellowship(){
+  localStorage.setItem('ru_fellowship',JSON.stringify({title:document.getElementById('fellTitle').value,desc:document.getElementById('fellDesc').value}));
+  showToast('✓ Fellowship section saved!');
+}
+
+// ── MISSION ──
+function loadMission(){
+  const m=JSON.parse(localStorage.getItem('ru_mission')||'{}');
+  if(m.p1)document.getElementById('missionP1').value=m.p1;
+  if(m.p2)document.getElementById('missionP2').value=m.p2;
+}
+function saveMission(){
+  localStorage.setItem('ru_mission',JSON.stringify({p1:document.getElementById('missionP1').value,p2:document.getElementById('missionP2').value}));
+  showToast('✓ Who We Are section saved!');
+}
+
+// ── TEAM ──
+let teamData=[];
+function renderTeamEditor(){
+  teamData=JSON.parse(localStorage.getItem('ru_team')||'null')||[
+    {name:'Shubham Tiwari',role:'Founder & Director',photo:''},
+    {name:'Nisha Verma',role:'Core Team',photo:''},
+    {name:'Sanjukta Patra',role:'Core Team',photo:''},
+    {name:'Sumit Kumar',role:'Core Team',photo:''},
+    {name:'SK Misbaul Alam',role:'Core Team',photo:''}
+  ];
+  const list=document.getElementById('teamEditorList');list.innerHTML='';
+  teamData.forEach((m,i)=>{
+    const initials=(m.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    const row=document.createElement('div');row.className='team-editor-row';
+    row.innerHTML=`
+      <div style="text-align:center">
+        <div class="team-photo-preview" id="prev-${i}" onclick="document.getElementById('photo-${i}').click()">${m.photo?`<img src="${m.photo}">`:`<span>${initials}</span>`}</div>
+        <input type="file" accept="image/*" class="team-photo-upload" id="photo-${i}" onchange="teamPhotoUpload(this,${i})">
+        <label for="photo-${i}" class="photo-upload-label">📷 Upload</label>
+      </div>
+      <div class="team-col"><input value="${m.name||''}" placeholder="Full name" onchange="teamData[${i}].name=this.value"></div>
+      <div class="team-col"><input value="${m.role||''}" placeholder="Role" onchange="teamData[${i}].role=this.value"></div>
+      <button class="del-btn" onclick="removeTeamMember(${i})">✕</button>`;
+    list.appendChild(row);
+  });
+}
+function teamPhotoUpload(input,idx){
+  if(input.files&&input.files[0]){const r=new FileReader();r.onload=e=>{teamData[idx].photo=e.target.result;document.getElementById('prev-'+idx).innerHTML=`<img src="${e.target.result}">`};r.readAsDataURL(input.files[0])}
+}
+function addTeamMember(){teamData.push({name:'',role:'',photo:''});renderTeamEditor()}
+function removeTeamMember(i){if(!confirm('Remove this member?'))return;teamData.splice(i,1);renderTeamEditor()}
+function saveTeam(){localStorage.setItem('ru_team',JSON.stringify(teamData));refreshDashboard();showToast('✓ Team saved!')}
+
+// ── BLOG ──
+let blogData=[];
+function renderBlogEditor(){
+  blogData=JSON.parse(localStorage.getItem('ru_blogs')||'[]');
+  const list=document.getElementById('blogEditorList');list.innerHTML='';
+  if(blogData.length===0){list.innerHTML='<p style="color:var(--mid);font-size:0.85rem;padding:1rem 0">No posts yet. Click "Add New Post" below to publish your first one.</p>'}
+  blogData.forEach((b,i)=>{
+    const row=document.createElement('div');row.className='blog-editor-row';
+    row.innerHTML=`
+      <div style="text-align:center">
+        <div class="blog-thumb" id="bthumb-${i}" onclick="document.getElementById('bphoto-${i}').click()">${b.image?`<img src="${b.image}">`:(b.icon||'📝')}</div>
+        <input type="file" accept="image/*" class="team-photo-upload" id="bphoto-${i}" onchange="blogImgUpload(this,${i})">
+        <label for="bphoto-${i}" class="photo-upload-label">📷 Cover</label>
+      </div>
+      <div class="blog-edit-fields">
+        <input placeholder="Post title" value="${b.title||''}" onchange="blogData[${i}].title=this.value">
+        <div style="display:flex;gap:0.5rem">
+          <select onchange="blogData[${i}].category=this.value" style="flex:1">
+            <option ${b.category==='Field Story'?'selected':''}>Field Story</option>
+            <option ${b.category==='Report'?'selected':''}>Report</option>
+            <option ${b.category==='Research'?'selected':''}>Research</option>
+            <option ${b.category==='Announcement'?'selected':''}>Announcement</option>
+            <option ${b.category==='Publication'?'selected':''}>Publication</option>
+          </select>
+          <input placeholder="Author" value="${b.author||'RootsUp Team'}" onchange="blogData[${i}].author=this.value" style="flex:1">
+          <input type="date" value="${b.dateRaw||''}" onchange="blogData[${i}].dateRaw=this.value;blogData[${i}].date=new Date(this.value).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})" style="flex:1">
+        </div>
+        <input placeholder="Short excerpt (1-2 lines, shown on card)" value="${b.excerpt||''}" onchange="blogData[${i}].excerpt=this.value">
+        <textarea placeholder="Full post content" onchange="blogData[${i}].content=this.value">${b.content||''}</textarea>
+      </div>
+      <button class="del-btn" onclick="removeBlog(${i})">✕</button>`;
+    list.appendChild(row);
+  });
+}
+function blogImgUpload(input,idx){
+  if(input.files&&input.files[0]){const r=new FileReader();r.onload=e=>{blogData[idx].image=e.target.result;document.getElementById('bthumb-'+idx).innerHTML=`<img src="${e.target.result}">`};r.readAsDataURL(input.files[0])}
+}
+function addBlog(){blogData.push({title:'',category:'Field Story',author:'RootsUp Team',excerpt:'',content:'',image:'',date:new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})});renderBlogEditor()}
+function removeBlog(i){if(!confirm('Delete this post?'))return;blogData.splice(i,1);renderBlogEditor()}
+function saveBlogs(){localStorage.setItem('ru_blogs',JSON.stringify(blogData));refreshDashboard();showToast('✓ All posts saved! Live on Blog page.')}
+
+// ── PAYMENTS ──
+function loadPayments(){
+  document.getElementById('upiId').value=localStorage.getItem('ru_upi')||'';
+  const bank=JSON.parse(localStorage.getItem('ru_bank')||'{}');
+  ['bName','bAcc','bIfsc','bBank','bBranch','bType'].forEach(k=>{const map={bName:'name',bAcc:'acc',bIfsc:'ifsc',bBank:'bank',bBranch:'branch',bType:'type'};if(bank[map[k]])document.getElementById(k).value=bank[map[k]]});
+  const qr=localStorage.getItem('ru_qr');
+  if(qr){imgStore.qrData=qr;const img=document.getElementById('qrPreviewImg');img.src=qr;img.style.display='block'}
+}
+function saveUPI(){
+  localStorage.setItem('ru_upi',document.getElementById('upiId').value);
+  if(imgStore.qrData)localStorage.setItem('ru_qr',imgStore.qrData);
+  showToast('✓ UPI details saved!');
+}
+function saveBank(){
+  localStorage.setItem('ru_bank',JSON.stringify({name:document.getElementById('bName').value,acc:document.getElementById('bAcc').value,ifsc:document.getElementById('bIfsc').value,bank:document.getElementById('bBank').value,branch:document.getElementById('bBranch').value,type:document.getElementById('bType').value}));
+  showToast('✓ Bank details saved!');
+}
+
+// ── CONTACT & SOCIAL ──
+function loadContact(){
+  const c=JSON.parse(localStorage.getItem('ru_contact')||'{}');
+  if(c.address)document.getElementById('contactAddress').value=c.address;
+  if(c.phone)document.getElementById('contactPhone').value=c.phone;
+  if(c.email)document.getElementById('contactEmail').value=c.email;
+  if(c.tagline)document.getElementById('footerTaglineInput').value=c.tagline;
+  const s=JSON.parse(localStorage.getItem('ru_social')||'{}');
+  if(s.linkedin)document.getElementById('socLinkedin').value=s.linkedin;
+  if(s.instagram)document.getElementById('socInstagram').value=s.instagram;
+  if(s.facebook)document.getElementById('socFacebook').value=s.facebook;
+  if(s.twitter)document.getElementById('socTwitter').value=s.twitter;
+  if(s.youtube)document.getElementById('socYoutube').value=s.youtube;
+}
+function saveContact(){
+  localStorage.setItem('ru_contact',JSON.stringify({address:document.getElementById('contactAddress').value,phone:document.getElementById('contactPhone').value,email:document.getElementById('contactEmail').value,tagline:document.getElementById('footerTaglineInput').value}));
+  showToast('✓ Contact details saved!');
+}
+function saveSocial(){
+  localStorage.setItem('ru_social',JSON.stringify({linkedin:document.getElementById('socLinkedin').value,instagram:document.getElementById('socInstagram').value,facebook:document.getElementById('socFacebook').value,twitter:document.getElementById('socTwitter').value,youtube:document.getElementById('socYoutube').value}));
+  showToast('✓ Social links saved!');
+}
+
+// ── ADMINS ──
+function renderAdminList(){
+  const admins=getAdmins();const cur=sessionStorage.getItem('ru_current')||'';
+  const list=document.getElementById('adminList');list.innerHTML='';
+  admins.forEach((a,i)=>{
+    const main=a.isMain||i===0;
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:0.75rem;border:1px solid var(--border);border-radius:4px;margin-bottom:0.5rem;background:#F8FAFC';
+    row.innerHTML=`<div><strong style="font-size:0.88rem">${a.email}</strong>${main?'<span style="font-size:0.7rem;background:#EEF2FF;color:var(--navy);padding:0.15rem 0.5rem;border-radius:2px;margin-left:0.5rem">Main Admin</span>':''}${a.email.toLowerCase()===cur.toLowerCase()?'<span style="font-size:0.7rem;background:#F0FDF4;color:var(--green);padding:0.15rem 0.5rem;border-radius:2px;margin-left:0.5rem">You</span>':''}</div>${!main&&a.email.toLowerCase()!==cur.toLowerCase()?`<button onclick="removeAdmin(${i})" style="background:none;border:1px solid #FCA5A5;color:var(--red);padding:0.3rem 0.7rem;border-radius:3px;cursor:pointer;font-size:0.78rem">Remove</button>`:''}`;
+    list.appendChild(row);
+  });
+}
+function addAdmin(){
+  const em=document.getElementById('newAdminEmail').value.trim();const pw=document.getElementById('newAdminPass').value;
+  if(!em||!pw){showToast('Enter both email and password.');return}
+  const admins=getAdmins();
+  if(admins.find(a=>a.email.toLowerCase()===em.toLowerCase())){showToast('This email already exists.');return}
+  admins.push({email:em,password:pw,isMain:false});saveAdmins(admins);
+  document.getElementById('newAdminEmail').value='';document.getElementById('newAdminPass').value='';
+  renderAdminList();showToast('✓ New admin added!');
+}
+function removeAdmin(i){if(!confirm('Remove this admin?'))return;const a=getAdmins();a.splice(i,1);saveAdmins(a);renderAdminList();showToast('Admin removed.')}
+
+// ── PASSWORD ──
+function changePassword(){
+  const cur=document.getElementById('curPass').value,nw=document.getElementById('newPass').value,cf=document.getElementById('confPass').value;
+  const ce=sessionStorage.getItem('ru_current')||'';const admins=getAdmins();
+  const idx=admins.findIndex(a=>a.email.toLowerCase()===ce.toLowerCase()&&a.password===cur);
+  if(idx===-1){showToast('Current password incorrect.');return}
+  if(nw.length<6){showToast('New password must be 6+ characters.');return}
+  if(nw!==cf){showToast('Passwords do not match.');return}
+  admins[idx].password=nw;saveAdmins(admins);showToast('✓ Password changed! Logging out...');
+  setTimeout(doLogout,1500);
+}
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3000)}
+</script>
+</body>
+</html>

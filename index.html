@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RootsUp Foundation — Rooted in Community, Rising Together</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1A3A7A;--amber:#F5A623;--green:#3A8C4A;--sky:#4A8FD4;
+  --offwhite:#F9F6F0;--charcoal:#1C1C1C;--mid:#6B7280;--border:#E2DDD6;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--offwhite);color:var(--charcoal);overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(26,58,122,0.98);backdrop-filter:blur(10px);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 5%;border-bottom:1px solid rgba(255,255,255,0.07)}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:900;color:#fff;text-decoration:none;letter-spacing:0.01em;flex-shrink:0}
+.nav-logo span{color:var(--amber)}
+.nav-links{display:flex;align-items:center;gap:0.2rem;list-style:none}
+.nav-links li a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:0.78rem;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;padding:0.45rem 0.7rem;border-radius:3px;transition:color 0.2s,background 0.2s;white-space:nowrap}
+.nav-links li a:hover{color:#fff;background:rgba(255,255,255,0.08)}
+.nav-links li a.nav-cta{background:var(--amber);color:var(--navy)!important;font-weight:700;padding:0.5rem 1rem;margin-left:0.5rem;border-radius:3px}
+.nav-links li a.nav-cta:hover{opacity:0.88}
+.hamburger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:40px;height:40px;background:none;border:none;cursor:pointer;padding:4px}
+.hamburger span{display:block;width:24px;height:2px;background:#fff;border-radius:2px;transition:all 0.3s}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:rgba(20,36,80,0.98);backdrop-filter:blur(12px);z-index:299;flex-direction:column;padding:2rem 5%;overflow-y:auto}
+.mobile-menu.open{display:flex}
+.mobile-menu ul{list-style:none;display:flex;flex-direction:column;gap:0.3rem}
+.mobile-menu ul li a{display:block;padding:1rem 0;font-size:1.05rem;font-weight:500;color:rgba(255,255,255,0.8);text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.07);transition:color 0.2s}
+.mobile-menu ul li a:hover{color:var(--amber)}
+.mobile-cta{margin-top:1.5rem;background:var(--amber);color:var(--navy);padding:1rem;text-align:center;font-size:1rem;font-weight:700;border-radius:3px;text-decoration:none;display:block}
+
+/* HERO */
+.hero{min-height:100vh;background-color:var(--navy);position:relative;display:flex;align-items:center;padding:0 5%}
+.hero-overlay{position:absolute;inset:0;background:rgba(10,25,60,0.5);pointer-events:none}
+.hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:5rem;width:100%;padding:100px 0 80px}
+.hero-eyebrow{display:inline-block;font-size:0.7rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--amber);margin-bottom:1.2rem}
+.hero-headline{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,4.5vw,3.8rem);font-weight:900;color:#fff;line-height:1.08;margin-bottom:1.2rem}
+.hero-headline em{font-style:italic;color:var(--amber)}
+.hero-sub{color:rgba(255,255,255,0.75);font-size:0.98rem;line-height:1.8;max-width:460px;margin-bottom:2rem}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
+.btn-primary{background:var(--amber);color:var(--navy);padding:0.85rem 2rem;font-size:0.85rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;border-radius:2px;border:none;cursor:pointer;display:inline-block;transition:opacity 0.2s}
+.btn-primary:hover{opacity:0.88}
+.btn-outline{border:1.5px solid rgba(255,255,255,0.35);color:rgba(255,255,255,0.8);padding:0.85rem 2rem;font-size:0.85rem;font-weight:500;text-decoration:none;border-radius:2px;background:transparent;cursor:pointer;display:inline-block;transition:border-color 0.2s,color 0.2s}
+.btn-outline:hover{border-color:var(--amber);color:var(--amber)}
+.hero-visual{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.1);border-radius:2px;overflow:hidden}
+.hero-tile{background:rgba(255,255,255,0.05);padding:1.8rem 1.4rem;transition:background 0.25s}
+.hero-tile:hover{background:rgba(255,255,255,0.1)}
+.tile-icon{font-size:1.6rem;margin-bottom:0.6rem}
+.tile-label{font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--amber);margin-bottom:0.25rem}
+.tile-desc{font-size:0.78rem;color:rgba(255,255,255,0.45);line-height:1.5}
+
+/* VISION */
+.vision-strip{background:var(--navy);padding:4rem 5%}
+.vision-label{font-size:0.7rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--amber);text-align:center;margin-bottom:0.6rem}
+.vision-heading{font-family:'Playfair Display',serif;font-size:clamp(1.1rem,2vw,1.4rem);color:rgba(255,255,255,0.45);text-align:center;margin-bottom:3rem}
+.vision-heading strong{color:#fff}
+.vision-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;max-width:900px;margin:0 auto}
+.vision-stat{background:var(--navy);padding:2.5rem 1.5rem;text-align:center}
+.v-number{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:900;color:var(--amber);line-height:1;display:block}
+.v-label{font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-top:0.5rem;display:block}
+.v-sub{font-size:0.72rem;color:rgba(255,255,255,0.3);margin-top:0.3rem;display:block}
+
+/* SECTIONS */
+.section{padding:6rem 5%}
+.section-alt{background:#fff}
+.section-eyebrow{font-size:0.7rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--green);margin-bottom:0.7rem}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:700;color:var(--navy);line-height:1.15;max-width:540px;margin-bottom:1rem}
+.section-sub{color:var(--mid);font-size:0.94rem;line-height:1.75;max-width:500px;margin-bottom:3rem}
+
+/* FOCUS */
+.focus-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.focus-card{background:var(--offwhite);border:1px solid var(--border);padding:2rem;position:relative;overflow:hidden;transition:transform 0.25s,box-shadow 0.25s}
+.focus-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(26,58,122,0.1)}
+.focus-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.fc-edu::before{background:var(--navy)}.fc-health::before{background:var(--sky)}
+.fc-env::before{background:var(--green)}.fc-women::before{background:#D4547A}
+.fc-rural::before{background:var(--amber)}.fc-youth::before{background:#7B4FD4}
+.card-icon{font-size:1.8rem;margin-bottom:0.9rem}
+.card-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--navy);margin-bottom:0.6rem}
+.card-body{font-size:0.86rem;color:var(--mid);line-height:1.7}
+.card-tag{display:inline-block;margin-top:1rem;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;background:rgba(123,79,212,0.1);color:#7B4FD4;padding:0.3rem 0.7rem;border-radius:2px}
+
+/* FELLOWSHIP */
+.fellowship-banner{background:linear-gradient(135deg,#1A3A7A 0%,#2A1F6B 100%);padding:5rem 5%;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.fellowship-content .section-eyebrow{color:var(--amber)}
+.fellowship-content .section-title{color:#fff;max-width:none}
+.fellowship-content .section-sub{color:rgba(255,255,255,0.6);max-width:none;margin-bottom:2rem}
+.fellowship-details{display:flex;flex-direction:column;gap:1.4rem}
+.f-detail{display:flex;gap:1rem;align-items:flex-start}
+.f-detail-icon{font-size:1.3rem;min-width:32px;margin-top:2px}
+.f-detail-text h5{font-size:0.82rem;font-weight:600;color:rgba(255,255,255,0.9);margin-bottom:0.2rem}
+.f-detail-text p{font-size:0.8rem;color:rgba(255,255,255,0.5);line-height:1.5}
+
+/* MISSION */
+.mission-layout{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.mission-values{display:flex;flex-direction:column;gap:1.5rem}
+.value-row{display:flex;gap:1.2rem;align-items:flex-start}
+.value-num{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--border);line-height:1;min-width:36px}
+.value-content h4{font-size:0.88rem;font-weight:600;color:var(--navy);margin-bottom:0.3rem}
+.value-content p{font-size:0.84rem;color:var(--mid);line-height:1.65}
+
+/* TEAM */
+.team-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:2rem}
+.team-card{text-align:center}
+.team-avatar{width:90px;height:90px;border-radius:50%;background:var(--navy);overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--amber);border:3px solid var(--border);margin:0 auto 0.9rem}
+.team-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.team-name{font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;color:var(--navy);margin-bottom:0.2rem}
+.team-role{font-size:0.72rem;color:var(--mid);letter-spacing:0.06em;text-transform:uppercase}
+
+/* INVOLVE */
+.involve-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+.involve-card{background:var(--navy);padding:2.2rem 1.8rem;color:#fff;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.involve-card::after{content:'';position:absolute;bottom:-24px;right:-24px;width:90px;height:90px;background:rgba(245,166,35,0.1);border-radius:50%}
+.involve-icon{font-size:1.8rem;margin-bottom:1rem}
+.involve-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;margin-bottom:0.55rem}
+.involve-desc{font-size:0.83rem;color:rgba(255,255,255,0.58);line-height:1.65;margin-bottom:1.5rem;flex:1}
+.involve-btn{font-size:0.78rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--navy);background:var(--amber);border:none;padding:0.6rem 1.2rem;border-radius:2px;cursor:pointer;transition:opacity 0.2s;align-self:flex-start;position:relative;z-index:1}
+.involve-btn:hover{opacity:0.88}
+
+/* BLOG SECTION */
+.blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.blog-card{background:#fff;border:1px solid var(--border);overflow:hidden;transition:transform 0.25s,box-shadow 0.25s;text-decoration:none;display:block;color:inherit}
+.blog-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(26,58,122,0.1)}
+.blog-card-img{height:180px;background:var(--navy);overflow:hidden;position:relative}
+.blog-card-img img{width:100%;height:100%;object-fit:cover}
+.blog-card-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;background:linear-gradient(135deg,var(--navy),#2A1F6B)}
+.blog-card-body{padding:1.5rem}
+.blog-tag{font-size:0.68rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--amber);margin-bottom:0.5rem;display:block}
+.blog-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:0.5rem;line-height:1.3}
+.blog-excerpt{font-size:0.83rem;color:var(--mid);line-height:1.6;margin-bottom:1rem}
+.blog-meta{font-size:0.75rem;color:var(--mid);display:flex;gap:0.75rem;flex-wrap:wrap}
+.blog-meta span{display:flex;align-items:center;gap:0.25rem}
+.no-blogs{text-align:center;padding:4rem 2rem;color:var(--mid);font-size:0.94rem}
+
+/* CTA */
+.cta-banner{background:var(--green);padding:5rem 5%;text-align:center}
+.cta-banner h2{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,3vw,2.5rem);color:#fff;margin-bottom:1rem}
+.cta-banner p{color:rgba(255,255,255,0.72);font-size:0.94rem;max-width:460px;margin:0 auto 2.5rem;line-height:1.75}
+.btn-white{background:#fff;color:var(--green);padding:0.9rem 2.4rem;font-size:0.88rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;border-radius:2px;display:inline-block;transition:opacity 0.2s}
+.btn-white:hover{opacity:0.9}
+
+/* VISITOR COUNTER */
+.visitor-bar{background:rgba(26,58,122,0.06);border-top:1px solid var(--border);padding:0.9rem 5%;display:flex;justify-content:center;align-items:center;gap:0.6rem}
+.visitor-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
+.visitor-text{font-size:0.78rem;color:var(--mid);letter-spacing:0.04em}
+.visitor-text strong{color:var(--navy)}
+
+/* FOOTER */
+footer{background:var(--charcoal);padding:4rem 5% 2rem}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,0.08)}
+.footer-brand{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:#fff;margin-bottom:0.7rem}
+.footer-brand span{color:var(--amber)}
+.footer-tagline{font-size:0.83rem;color:rgba(255,255,255,0.45);line-height:1.7;max-width:260px;margin-bottom:1rem}
+.footer-reg{font-size:0.72rem;letter-spacing:0.06em;color:rgba(255,255,255,0.25)}
+.footer-address{font-size:0.8rem;color:rgba(255,255,255,0.35);line-height:1.7;margin-top:0.75rem}
+.footer-col h5{font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.75);margin-bottom:1.2rem}
+.footer-col ul{list-style:none}
+.footer-col ul li{margin-bottom:0.6rem}
+.footer-col ul a{color:rgba(255,255,255,0.4);text-decoration:none;font-size:0.83rem;transition:color 0.2s}
+.footer-col ul a:hover{color:var(--amber)}
+.social-links{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.3rem}
+.social-link{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.85rem;transition:background 0.2s,color 0.2s}
+.social-link:hover{background:var(--amber);color:var(--navy)}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;font-size:0.76rem;color:rgba(255,255,255,0.3)}
+.footer-admin-link{color:rgba(255,255,255,0.12)!important;font-size:0.68rem!important;text-decoration:none;transition:color 0.2s}
+.footer-admin-link:hover{color:rgba(255,255,255,0.4)!important}
+
+/* MODALS */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.68);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.active{display:flex}
+.modal-box{background:#fff;border-radius:4px;max-width:520px;width:100%;max-height:92vh;overflow-y:auto;position:relative}
+.modal-header{background:var(--navy);padding:2rem;position:relative}
+.modal-header h3{font-family:'Playfair Display',serif;font-size:1.45rem;color:#fff;margin-bottom:0.25rem}
+.modal-header p{font-size:0.83rem;color:rgba(255,255,255,0.55)}
+.modal-close{position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,0.12);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s}
+.modal-close:hover{background:rgba(255,255,255,0.25)}
+.modal-body{padding:2rem}
+.support-tabs{display:flex;border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:2rem}
+.stab{flex:1;padding:0.75rem;text-align:center;font-size:0.8rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;background:#fff;border:none;color:var(--mid);transition:all 0.2s}
+.stab.active{background:var(--navy);color:#fff}
+.stab-content{display:none}.stab-content.active{display:block}
+.upi-box{text-align:center;padding:1.5rem;background:var(--offwhite);border-radius:3px;margin-bottom:1.5rem}
+.qr-img-wrap{width:160px;height:160px;margin:0 auto 1rem;border-radius:4px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;border:1px solid var(--border)}
+.qr-img-wrap img{width:100%;height:100%;object-fit:contain}
+.upi-id-box{background:#fff;border:1px solid var(--border);border-radius:3px;padding:0.75rem 1rem;display:flex;align-items:center;justify-content:space-between;margin-top:1rem}
+.upi-id-label{font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);margin-bottom:0.2rem}
+.upi-id-value{font-size:0.95rem;font-weight:600;color:var(--navy)}
+.copy-btn{background:var(--amber);border:none;color:var(--navy);font-size:0.72rem;font-weight:700;padding:0.4rem 0.8rem;border-radius:2px;cursor:pointer}
+.bank-table{width:100%;border-collapse:collapse}
+.bank-table tr{border-bottom:1px solid var(--border)}
+.bank-table td{padding:0.8rem 0;font-size:0.86rem}
+.bank-table td:first-child{color:var(--mid);width:45%}
+.bank-table td:last-child{color:var(--navy);font-weight:600}
+.form-group{margin-bottom:1.1rem}
+.form-group label{display:block;font-size:0.72rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--navy);margin-bottom:0.35rem}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:0.7rem 0.9rem;border:1px solid var(--border);border-radius:3px;font-size:0.88rem;font-family:inherit;color:var(--charcoal);background:#fff;transition:border-color 0.2s;outline:none}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--navy)}
+.form-group textarea{resize:vertical;min-height:90px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-submit{width:100%;padding:0.9rem;background:var(--navy);color:#fff;border:none;border-radius:3px;font-size:0.88rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;transition:opacity 0.2s;margin-top:0.5rem}
+.form-submit:hover{opacity:0.88}
+.form-success{display:none;text-align:center;padding:2rem 1rem}
+.form-success-icon{font-size:3rem;margin-bottom:1rem}
+.form-success h4{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--navy);margin-bottom:0.5rem}
+.form-success p{font-size:0.86rem;color:var(--mid);line-height:1.65}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.5s ease,transform 0.5s ease}
+.revealed{opacity:1;transform:translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .focus-grid{grid-template-columns:repeat(2,1fr)}
+  .team-grid{grid-template-columns:repeat(3,1fr)}
+  .involve-grid{grid-template-columns:repeat(2,1fr)}
+  .blog-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-top{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .hero-inner{grid-template-columns:1fr;padding:90px 0 60px;gap:0}
+  .hero-visual{display:none}
+  .hero-headline{font-size:2.1rem}
+  .vision-grid{grid-template-columns:repeat(2,1fr)}
+  .focus-grid{grid-template-columns:1fr}
+  .fellowship-banner{grid-template-columns:1fr;gap:2.5rem;padding:3.5rem 5%}
+  .mission-layout{grid-template-columns:1fr;gap:2.5rem}
+  .team-grid{grid-template-columns:repeat(2,1fr);gap:1.5rem}
+  .involve-grid{grid-template-columns:1fr}
+  .blog-grid{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr;gap:2rem}
+  .section{padding:4rem 5%}
+  .form-row{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .hero-headline{font-size:1.9rem}
+  .v-number{font-size:2rem}
+  .hero-actions{flex-direction:column}
+  .vision-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#home" class="nav-logo">Roots<span>Up</span> Foundation</a>
+  <ul class="nav-links">
+    <li><a href="#about">Who We Are</a></li>
+    <li><a href="#focus">Our Work</a></li>
+    <li><a href="#fellowship">Fellowship</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#blog">Blog</a></li>
+    <li><a href="#involve">Get Involved</a></li>
+    <li><a href="#" onclick="openModal('supportModal');return false;" class="nav-cta">Support Us</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <ul>
+    <li><a href="#about"      onclick="closeMenu()">Who We Are</a></li>
+    <li><a href="#focus"      onclick="closeMenu()">Our Work</a></li>
+    <li><a href="#fellowship" onclick="closeMenu()">Sarthi Fellowship</a></li>
+    <li><a href="#team"       onclick="closeMenu()">Our Team</a></li>
+    <li><a href="#blog"       onclick="closeMenu()">Blog</a></li>
+    <li><a href="#involve"    onclick="closeMenu()">Get Involved</a></li>
+  </ul>
+  <a class="mobile-cta" href="#" onclick="closeMenu();openModal('supportModal');return false;">💛 Support Us / Donate</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-overlay"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <span class="hero-eyebrow" id="siteEyebrow">Section 8 NGO · Raipur, Chhattisgarh</span>
+      <h1 class="hero-headline" id="siteHeadline">
+        Rooted in community.<br><em>Rising together.</em>
+      </h1>
+      <p class="hero-sub" id="siteHeroDesc">
+        We work in villages, schools, and community centres — not from offices. RootsUp Foundation is built by people who have sat with families, understood their realities, and chosen to stay. Education, health, livelihoods, women's rights, and the environment — because in a community, nothing works in isolation.
+      </p>
+      <div class="hero-actions">
+        <a href="#involve" class="btn-primary">Join the Mission</a>
+        <a href="#focus"   class="btn-outline">Our Work</a>
+      </div>
+    </div>
+    <div class="hero-visual" id="heroTiles">
+      <div class="hero-tile"><div class="tile-icon">📚</div><div class="tile-label">Education</div><div class="tile-desc">Quality learning for every child</div></div>
+      <div class="hero-tile"><div class="tile-icon">🌿</div><div class="tile-label">Environment</div><div class="tile-desc">Ecological restoration, water conservation</div></div>
+      <div class="hero-tile"><div class="tile-icon">💊</div><div class="tile-label">Health</div><div class="tile-desc">Nutrition, maternal & child health</div></div>
+      <div class="hero-tile"><div class="tile-icon">👩</div><div class="tile-label">Women</div><div class="tile-desc">SHG formation, legal literacy, leadership</div></div>
+      <div class="hero-tile" style="grid-column:span 2"><div class="tile-icon">🎓</div><div class="tile-label">Youth Leadership</div><div class="tile-desc">Sarthi Fellowship — shaping tomorrow's changemakers</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- VISION -->
+<div class="vision-strip">
+  <p class="vision-label">Our 2032 Vision</p>
+  <p class="vision-heading">By 2032, we aim to have reached <strong>every number below</strong> — not as targets, but as real people.</p>
+  <div class="vision-grid">
+    <div class="vision-stat reveal"><span class="v-number">10,000</span><span class="v-label">Children</span><span class="v-sub">in foundational learning programmes</span></div>
+    <div class="vision-stat reveal"><span class="v-number">500</span><span class="v-label">Youth Fellows</span><span class="v-sub">leading in their communities</span></div>
+    <div class="vision-stat reveal"><span class="v-number">1,200</span><span class="v-label">Families</span><span class="v-sub">with improved livelihoods</span></div>
+    <div class="vision-stat reveal"><span class="v-number">500</span><span class="v-label">Schools</span><span class="v-sub">strengthened across India</span></div>
+  </div>
+</div>
+
+<!-- FOCUS AREAS -->
+<section class="section" id="focus">
+  <p class="section-eyebrow">What We Do</p>
+  <h2 class="section-title">Five areas. One mission.</h2>
+  <p class="section-sub">Every community faces overlapping challenges. We respond with programmes that address root causes — not symptoms.</p>
+  <div class="focus-grid" id="focusGrid">
+    <div class="focus-card fc-edu reveal"><div class="card-icon">📚</div><h3 class="card-title">Education</h3><p class="card-body">Promoting quality, inclusive education — from foundational literacy to digital learning and school dropout reduction. Our programmes reach children and families who need it most.</p></div>
+    <div class="focus-card fc-health reveal"><div class="card-icon">💊</div><h3 class="card-title">Health</h3><p class="card-body">Health camps, nutrition awareness, maternal & child health, TB awareness, mental health support — bringing basic healthcare closer to the last mile.</p></div>
+    <div class="focus-card fc-env reveal"><div class="card-icon">🌿</div><h3 class="card-title">Environment</h3><p class="card-body">Tree plantation drives, waste management awareness, water conservation, and community-led ecological restoration — because a healthy environment is a prerequisite for everything else.</p></div>
+    <div class="focus-card fc-women reveal"><div class="card-icon">👩</div><h3 class="card-title">Women Empowerment</h3><p class="card-body">Skill training, SHG formation, legal literacy, safety awareness, and leadership building — because sustainable change happens when women lead it.</p></div>
+    <div class="focus-card fc-rural reveal"><div class="card-icon">🌾</div><h3 class="card-title">Rural Development</h3><p class="card-body">Livelihood training, sustainable agriculture, farmer producer organizations, and community governance — for rural families who want to build their own future.</p></div>
+    <div class="focus-card fc-youth reveal"><div class="card-icon">🎓</div><h3 class="card-title">Youth Leadership</h3><p class="card-body">The next generation of changemakers is already in our communities — they just need a platform, a mentor, and a mission. Through the Sarthi Fellowship, we invest in youth who want to lead from within.</p><span class="card-tag">✦ Sarthi Fellowship — Cohort 1: Oct 2026</span></div>
+  </div>
+</section>
+
+<!-- FELLOWSHIP -->
+<section class="fellowship-banner" id="fellowship">
+  <div class="fellowship-content reveal">
+    <p class="section-eyebrow">Now Open · Cohort 1 · October 2026</p>
+    <h2 class="section-title" id="fellowshipTitle">RootsUp Sarthi Fellowship</h2>
+    <p class="section-sub" id="fellowshipDesc">A year-long immersive fellowship for undergraduate students who want to work at the grassroots. Open to passionate students from across India ready to lead change from within their communities.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="openModal('fellowshipModal')">Apply for Cohort 1</button>
+      <a href="mailto:rootsupfoundation@gmail.com" class="btn-outline">Ask a Question</a>
+    </div>
+  </div>
+  <div class="fellowship-details reveal">
+    <div class="f-detail"><div class="f-detail-icon">📅</div><div class="f-detail-text"><h5>Duration</h5><p>October 2026 – September 2027 · 12 months</p></div></div>
+    <div class="f-detail"><div class="f-detail-icon">📍</div><div class="f-detail-text"><h5>Location</h5><p>Field-based — locations shared with selected fellows</p></div></div>
+    <div class="f-detail"><div class="f-detail-icon">🎯</div><div class="f-detail-text"><h5>Who Should Apply</h5><p>Undergraduate students passionate about community development, education, and social change</p></div></div>
+    <div class="f-detail"><div class="f-detail-icon">🌱</div><div class="f-detail-text"><h5>What You'll Do</h5><p>Field immersion, community projects, mentorship, leadership development</p></div></div>
+    <div class="f-detail"><div class="f-detail-icon">🎓</div><div class="f-detail-text"><h5>Cohort Size</h5><p>Limited seats — early applications encouraged</p></div></div>
+  </div>
+</section>
+
+<!-- WHO WE ARE -->
+<section class="section section-alt" id="about">
+  <div class="mission-layout">
+    <div class="mission-text reveal">
+      <p class="section-eyebrow">Who We Are</p>
+      <h2 class="section-title">Built from the ground, for the ground.</h2>
+      <p class="section-sub" style="margin-bottom:1.5rem" id="missionDesc1">RootsUp Foundation is a Section 8 Not-for-Profit registered in Raipur, Chhattisgarh. We are practitioners first — our team has worked inside rural schools and community meetings long before we registered as an NGO.</p>
+      <p class="section-sub" style="margin-bottom:0" id="missionDesc2">We believe the most durable development happens when communities are the architects of their own progress — and our role is to walk alongside them, not ahead of them.</p>
+    </div>
+    <div class="mission-values" id="valuesGrid">
+      <div class="value-row reveal"><span class="value-num">01</span><div class="value-content"><h4>Community First</h4><p>Every programme begins with listening. We do not arrive with solutions — we arrive with questions.</p></div></div>
+      <div class="value-row reveal"><span class="value-num">02</span><div class="value-content"><h4>Evidence-Informed</h4><p>We draw on NEP 2020 and field research — designing programmes grounded in both research and reality.</p></div></div>
+      <div class="value-row reveal"><span class="value-num">03</span><div class="value-content"><h4>Radical Transparency</h4><p>We share what works and what doesn't — with our funders, partners, and the communities we serve.</p></div></div>
+      <div class="value-row reveal"><span class="value-num">04</span><div class="value-content"><h4>Long-Term Commitment</h4><p>We don't do short sprints. We build relationships that outlast any single programme cycle.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="section" id="team">
+  <p class="section-eyebrow">People Behind the Mission</p>
+  <h2 class="section-title">The team.</h2>
+  <p class="section-sub">Field practitioners, educators, and community mobilisers who came together to build RootsUp Foundation.</p>
+  <div class="team-grid" id="teamGrid"></div>
+</section>
+
+<!-- BLOG -->
+<section class="section section-alt" id="blog">
+  <p class="section-eyebrow">Publications & Blog</p>
+  <h2 class="section-title">From the field.</h2>
+  <p class="section-sub">Stories, research, and reflections from our work on the ground.</p>
+  <div class="blog-grid" id="blogGrid">
+    <div class="no-blogs" style="grid-column:1/-1">
+      <div style="font-size:2.5rem;margin-bottom:1rem">📝</div>
+      <p>No publications yet. Check back soon.</p>
+    </div>
+  </div>
+</section>
+
+<!-- GET INVOLVED -->
+<section class="section" id="involve">
+  <p class="section-eyebrow">Get Involved</p>
+  <h2 class="section-title">There's a role for everyone.</h2>
+  <p class="section-sub">Whether you're a student, professional, funder, or community member — there's a way to be part of what we're building.</p>
+  <div class="involve-grid">
+    <div class="involve-card reveal"><div class="involve-icon">🎓</div><h3 class="involve-title">Sarthi Fellowship</h3><p class="involve-desc">A year-long immersive fellowship for undergraduate students. Cohort 1 begins October 2026.</p><button class="involve-btn" onclick="openModal('fellowshipModal')">Apply Now</button></div>
+    <div class="involve-card reveal"><div class="involve-icon">🤝</div><h3 class="involve-title">Volunteer</h3><p class="involve-desc">Bring your skills to the field — education, health, data, communication, or community outreach.</p><button class="involve-btn" onclick="openModal('volunteerModal')">Get in Touch</button></div>
+    <div class="involve-card reveal"><div class="involve-icon">🏢</div><h3 class="involve-title">Partner With Us</h3><p class="involve-desc">CSR partnerships, government collaboration, and academic research tie-ups. Let's build together.</p><button class="involve-btn" onclick="openModal('partnerModal')">Start a Conversation</button></div>
+    <div class="involve-card reveal"><div class="involve-icon">💛</div><h3 class="involve-title">Donate</h3><p class="involve-desc">Direct funding to our programmes or unrestricted operational support. Every rupee reaches the field.</p><button class="involve-btn" onclick="openModal('supportModal')">Support Us</button></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-banner" id="contact">
+  <h2>Let's build something that lasts.</h2>
+  <p id="ctaDesc">If you believe in community-led development — as a funder, a partner, a volunteer, or a fellow — write to us.</p>
+  <a href="mailto:rootsupfoundation@gmail.com" class="btn-white">Write to Us</a>
+</section>
+
+<!-- VISITOR COUNTER -->
+<div class="visitor-bar">
+  <div class="visitor-dot"></div>
+  <span class="visitor-text"><strong id="visitorCount">0</strong> people have visited this site</span>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">Roots<span>Up</span> Foundation</div>
+      <p class="footer-tagline" id="footerTagline">Rooted in community. Rising together. Working across education, health, environment, women empowerment, and rural development in Central India.</p>
+      <span class="footer-reg">Section 8 Not-for-Profit · Registered in Chhattisgarh</span>
+      <p class="footer-address" id="footerAddress"></p>
+      <div class="social-links" id="socialLinks" style="margin-top:1rem"></div>
+    </div>
+    <div class="footer-col">
+      <h5>Navigate</h5>
+      <ul>
+        <li><a href="#about">Who We Are</a></li>
+        <li><a href="#focus">Focus Areas</a></li>
+        <li><a href="#fellowship">Sarthi Fellowship</a></li>
+        <li><a href="#team">Our Team</a></li>
+        <li><a href="#blog">Blog</a></li>
+        <li><a href="#involve">Get Involved</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Get Involved</h5>
+      <ul>
+        <li><a href="#" onclick="openModal('fellowshipModal');return false;">Sarthi Fellowship</a></li>
+        <li><a href="#" onclick="openModal('volunteerModal');return false;">Volunteer</a></li>
+        <li><a href="#" onclick="openModal('partnerModal');return false;">Partner With Us</a></li>
+        <li><a href="#" onclick="openModal('supportModal');return false;">Donate</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="mailto:rootsupfoundation@gmail.com" id="footerEmail">Email Us</a></li>
+        <li><a href="#" id="footerPhone">Phone</a></li>
+        <li><a href="https://rootsupfoundation.org">Website</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 RootsUp Foundation. All rights reserved.</span>
+    <a href="admin.html" class="footer-admin-link">Admin</a>
+  </div>
+</footer>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="supportModal">
+  <div class="modal-box">
+    <div class="modal-header"><button class="modal-close" onclick="closeModal('supportModal')">✕</button><h3>Support RootsUp Foundation</h3><p>100% of your donation reaches the field.</p></div>
+    <div class="modal-body">
+      <div class="support-tabs">
+        <button class="stab active" onclick="switchTab(event,'upi')">📱 UPI / QR Code</button>
+        <button class="stab"        onclick="switchTab(event,'bank')">🏦 Bank Transfer</button>
+      </div>
+      <div class="stab-content active" id="tab-upi">
+        <div class="upi-box">
+          <div class="qr-img-wrap" id="qrWrap"><span style="font-size:2rem;color:#ccc">📷</span></div>
+          <div class="upi-id-box"><div><div class="upi-id-label">UPI ID</div><div class="upi-id-value" id="upiDisplay">—</div></div><button class="copy-btn" onclick="copyUPI()">Copy</button></div>
+        </div>
+        <p style="font-size:0.8rem;color:var(--mid);text-align:center;line-height:1.65">Google Pay · PhonePe · Paytm · BHIM — all accepted.<br>After payment, send screenshot to <a href="mailto:rootsupfoundation@gmail.com" style="color:var(--navy);font-weight:600">rootsupfoundation@gmail.com</a></p>
+      </div>
+      <div class="stab-content" id="tab-bank">
+        <table class="bank-table"><tr><td>Account Name</td><td id="bName">—</td></tr><tr><td>Account Number</td><td id="bAcc">—</td></tr><tr><td>IFSC Code</td><td id="bIfsc">—</td></tr><tr><td>Bank Name</td><td id="bBank">—</td></tr><tr><td>Branch</td><td id="bBranch">—</td></tr><tr><td>Account Type</td><td id="bType">—</td></tr></table>
+        <p style="font-size:0.8rem;color:var(--mid);margin-top:1.5rem;line-height:1.65">After transfer, share UTR at <a href="mailto:rootsupfoundation@gmail.com" style="color:var(--navy);font-weight:600">rootsupfoundation@gmail.com</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="fellowshipModal">
+  <div class="modal-box">
+    <div class="modal-header"><button class="modal-close" onclick="closeModal('fellowshipModal')">✕</button><h3>Sarthi Fellowship — Apply</h3><p>Cohort 1 · October 2026 – September 2027</p></div>
+    <div class="modal-body">
+      <div id="fellowship-form">
+        <div class="form-row"><div class="form-group"><label>Full Name *</label><input type="text" id="f-name" placeholder="Your full name"></div><div class="form-group"><label>Age</label><input type="number" id="f-age" placeholder="Your age"></div></div>
+        <div class="form-row"><div class="form-group"><label>Email *</label><input type="email" id="f-email" placeholder="email@example.com"></div><div class="form-group"><label>Phone *</label><input type="tel" id="f-phone" placeholder="10-digit number"></div></div>
+        <div class="form-row"><div class="form-group"><label>College / University *</label><input type="text" id="f-college" placeholder="College name"></div><div class="form-group"><label>Year of Study</label><select id="f-year"><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>Final Year</option></select></div></div>
+        <div class="form-group"><label>State / City</label><input type="text" id="f-state" placeholder="Where are you based?"></div>
+        <div class="form-group"><label>Why do you want to join? *</label><textarea id="f-why" placeholder="Tell us in your own words..."></textarea></div>
+        <div class="form-group"><label>Focus Area of Interest</label><select id="f-area"><option>Education</option><option>Health</option><option>Women Empowerment</option><option>Environment</option><option>Rural Development</option><option>Youth Leadership</option></select></div>
+        <button class="form-submit" onclick="submitForm('fellowship')">Submit Application →</button>
+      </div>
+      <div class="form-success" id="fellowship-success"><div class="form-success-icon">🌱</div><h4>Application Received!</h4><p>Thank you! Our team will reach out within 7 days.<br><br>Questions? Write to <strong>rootsupfoundation@gmail.com</strong></p></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="volunteerModal">
+  <div class="modal-box">
+    <div class="modal-header"><button class="modal-close" onclick="closeModal('volunteerModal')">✕</button><h3>Volunteer With Us</h3><p>Bring your skills to the grassroots.</p></div>
+    <div class="modal-body">
+      <div id="volunteer-form">
+        <div class="form-row"><div class="form-group"><label>Full Name *</label><input type="text" id="v-name" placeholder="Your name"></div><div class="form-group"><label>Phone *</label><input type="tel" id="v-phone" placeholder="10-digit number"></div></div>
+        <div class="form-group"><label>Email *</label><input type="email" id="v-email" placeholder="email@example.com"></div>
+        <div class="form-group"><label>Profession / Background</label><input type="text" id="v-prof" placeholder="e.g. Teacher, Designer, Student..."></div>
+        <div class="form-group"><label>How can you contribute?</label><select id="v-area"><option>Education / Teaching</option><option>Health / Medical</option><option>Data / Research</option><option>Design / Communication</option><option>Community Outreach</option><option>Fundraising</option><option>Other</option></select></div>
+        <div class="form-group"><label>Tell us more</label><textarea id="v-more" placeholder="Your availability and skills..."></textarea></div>
+        <button class="form-submit" onclick="submitForm('volunteer')">Submit →</button>
+      </div>
+      <div class="form-success" id="volunteer-success"><div class="form-success-icon">🤝</div><h4>Thank You!</h4><p>We'll be in touch soon.<br><br><strong>rootsupfoundation@gmail.com</strong></p></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="partnerModal">
+  <div class="modal-box">
+    <div class="modal-header"><button class="modal-close" onclick="closeModal('partnerModal')">✕</button><h3>Partner With RootsUp</h3><p>CSR · Government · Academic · Institutional</p></div>
+    <div class="modal-body">
+      <div id="partner-form">
+        <div class="form-row"><div class="form-group"><label>Your Name *</label><input type="text" id="p-name" placeholder="Full name"></div><div class="form-group"><label>Designation</label><input type="text" id="p-desig" placeholder="e.g. CSR Head"></div></div>
+        <div class="form-row"><div class="form-group"><label>Organisation *</label><input type="text" id="p-org" placeholder="Company / NGO / Institution"></div><div class="form-group"><label>Partnership Type</label><select id="p-type"><option>CSR Funding</option><option>Programme Partnership</option><option>Academic Research</option><option>Government Collaboration</option><option>Other</option></select></div></div>
+        <div class="form-group"><label>Email *</label><input type="email" id="p-email" placeholder="email@organisation.com"></div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="p-phone" placeholder="Contact number"></div>
+        <div class="form-group"><label>What would you like to explore?</label><textarea id="p-msg" placeholder="Briefly describe what you have in mind..."></textarea></div>
+        <button class="form-submit" onclick="submitForm('partner')">Send Message →</button>
+      </div>
+      <div class="form-success" id="partner-success"><div class="form-success-icon">🏢</div><h4>Message Sent!</h4><p>We'll connect within 48 hours.<br><br><strong>rootsupfoundation@gmail.com</strong></p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Reveal
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('revealed');obs.unobserve(x.target)}})},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// Hamburger
+function toggleMenu(){const h=document.getElementById('hamburger'),m=document.getElementById('mobileMenu');h.classList.toggle('open');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':''}
+function closeMenu(){document.getElementById('hamburger').classList.remove('open');document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow=''}
+
+// Modals
+function openModal(id){document.getElementById(id).classList.add('active');document.body.style.overflow='hidden'}
+function closeModal(id){document.getElementById(id).classList.remove('active');document.body.style.overflow=''}
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',function(e){if(e.target===this)closeModal(this.id)}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal-overlay.active').forEach(m=>closeModal(m.id))});
+function switchTab(e,t){document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.stab-content').forEach(c=>c.classList.remove('active'));e.target.classList.add('active');document.getElementById('tab-'+t).classList.add('active')}
+function copyUPI(){const t=document.getElementById('upiDisplay').innerText;if(t==='—')return;navigator.clipboard.writeText(t).then(()=>{const b=event.target;b.textContent='Copied!';setTimeout(()=>b.textContent='Copy',2000)})}
+
+// Forms
+function submitForm(type){
+  const map={fellowship:{fields:['f-name','f-email','f-phone','f-college','f-age','f-year','f-state','f-why','f-area'],success:'fellowship-success',form:'fellowship-form'},volunteer:{fields:['v-name','v-phone','v-email','v-prof','v-area','v-more'],success:'volunteer-success',form:'volunteer-form'},partner:{fields:['p-name','p-desig','p-org','p-type','p-email','p-phone','p-msg'],success:'partner-success',form:'partner-form'}};
+  const cfg=map[type];let body=`RootsUp Foundation — ${type.toUpperCase()}\n\n`;
+  cfg.fields.forEach(id=>{const el=document.getElementById(id);if(el&&el.value)body+=`${id}: ${el.value}\n`});
+  document.getElementById(cfg.form).style.display='none';document.getElementById(cfg.success).style.display='block';
+  setTimeout(()=>window.open('mailto:rootsupfoundation@gmail.com?subject=New '+type+' — RootsUp&body='+encodeURIComponent(body),'_blank'),600);
+}
+
+// Load all admin data
+function loadSiteData(){
+  // Hero
+  const hero=JSON.parse(localStorage.getItem('ru_hero')||'{}');
+  if(hero.desc)document.getElementById('siteHeroDesc').textContent=hero.desc;
+  if(hero.eyebrow)document.getElementById('siteEyebrow').textContent=hero.eyebrow;
+  const heroBg=localStorage.getItem('ru_hero_bg')||'';
+  if(heroBg){const s=document.querySelector('.hero');s.style.backgroundImage=`url('${heroBg}')`;s.style.backgroundSize='cover';s.style.backgroundPosition='center'}
+
+  // Bank
+  const bank=JSON.parse(localStorage.getItem('ru_bank')||'{}');
+  if(bank.name)document.getElementById('bName').textContent=bank.name;
+  if(bank.acc)document.getElementById('bAcc').textContent=bank.acc;
+  if(bank.ifsc)document.getElementById('bIfsc').textContent=bank.ifsc;
+  if(bank.bank)document.getElementById('bBank').textContent=bank.bank;
+  if(bank.branch)document.getElementById('bBranch').textContent=bank.branch;
+  if(bank.type)document.getElementById('bType').textContent=bank.type;
+
+  // UPI
+  const upi=localStorage.getItem('ru_upi')||'';
+  if(upi)document.getElementById('upiDisplay').textContent=upi;
+  const qr=localStorage.getItem('ru_qr')||'';
+  if(qr){const w=document.getElementById('qrWrap');w.innerHTML='';const img=document.createElement('img');img.src=qr;img.style.cssText='width:100%;height:100%;object-fit:contain';w.appendChild(img)}
+
+  // Team
+  const team=JSON.parse(localStorage.getItem('ru_team')||'null');
+  const grid=document.getElementById('teamGrid');
+  const members=team&&team.length>0?team:[
+    {name:'Shubham Tiwari',role:'Founder & Director',photo:'',init:'S'},
+    {name:'Nisha Verma',role:'Core Team',photo:'',init:'N'},
+    {name:'Sanjukta Patra',role:'Core Team',photo:'',init:'SP'},
+    {name:'Sumit Kumar',role:'Core Team',photo:'',init:'SK'},
+    {name:'SK Misbaul Alam',role:'Core Team',photo:'',init:'M'}
+  ];
+  grid.innerHTML='';
+  members.forEach(m=>{
+    const card=document.createElement('div');card.className='team-card reveal';
+    const av=document.createElement('div');av.className='team-avatar';
+    if(m.photo){const img=document.createElement('img');img.src=m.photo;img.alt=m.name;av.appendChild(img)}
+    else av.textContent=(m.init||(m.name||'?').substring(0,2).toUpperCase());
+    const nm=document.createElement('div');nm.className='team-name';nm.textContent=m.name||'';
+    const rl=document.createElement('div');rl.className='team-role';rl.textContent=m.role||'';
+    card.appendChild(av);card.appendChild(nm);card.appendChild(rl);
+    grid.appendChild(card);obs.observe(card);
+  });
+
+  // Fellowship
+  const fell=JSON.parse(localStorage.getItem('ru_fellowship')||'{}');
+  if(fell.title)document.getElementById('fellowshipTitle').textContent=fell.title;
+  if(fell.desc)document.getElementById('fellowshipDesc').textContent=fell.desc;
+
+  // Contact / Footer
+  const contact=JSON.parse(localStorage.getItem('ru_contact')||'{}');
+  if(contact.address){const a=document.getElementById('footerAddress');a.textContent=contact.address;a.style.display='block'}
+  if(contact.phone){const p=document.getElementById('footerPhone');p.textContent='📞 '+contact.phone;p.href='tel:'+contact.phone.replace(/\s/g,'')}
+  if(contact.email){const e=document.getElementById('footerEmail');e.textContent=contact.email;e.href='mailto:'+contact.email}
+  if(contact.tagline)document.getElementById('footerTagline').textContent=contact.tagline;
+
+  // Social links
+  const soc=JSON.parse(localStorage.getItem('ru_social')||'{}');
+  const sl=document.getElementById('socialLinks');sl.innerHTML='';
+  const socMap={linkedin:{icon:'in',label:'LinkedIn'},instagram:{icon:'📸',label:'Instagram'},facebook:{icon:'f',label:'Facebook'},twitter:{icon:'𝕏',label:'Twitter'},youtube:{icon:'▶',label:'YouTube'}};
+  Object.entries(socMap).forEach(([k,v])=>{if(soc[k]){const a=document.createElement('a');a.href=soc[k];a.target='_blank';a.rel='noopener';a.className='social-link';a.title=v.label;a.textContent=v.icon;sl.appendChild(a)}});
+
+  // Blog
+  const blogs=JSON.parse(localStorage.getItem('ru_blogs')||'[]');
+  const bg=document.getElementById('blogGrid');
+  if(blogs.length>0){
+    bg.innerHTML='';
+    blogs.forEach(b=>{
+      const card=document.createElement('a');card.className='blog-card';card.href='#';card.onclick=e=>{e.preventDefault();showBlogDetail(b)};
+      card.innerHTML=`
+        <div class="blog-card-img">${b.image?`<img src="${b.image}" alt="${b.title}">`:`<div class="blog-card-img-placeholder">${b.icon||'📝'}</div>`}</div>
+        <div class="blog-card-body">
+          <span class="blog-tag">${b.category||'Publication'}</span>
+          <div class="blog-title">${b.title}</div>
+          <div class="blog-excerpt">${b.excerpt||''}</div>
+          <div class="blog-meta"><span>📅 ${b.date||''}</span><span>✍️ ${b.author||'RootsUp Team'}</span></div>
+        </div>`;
+      bg.appendChild(card);
+    });
+  }
+
+  // Visitor
+  let vc=parseInt(localStorage.getItem('ru_visitors')||'1241');
+  const last=localStorage.getItem('ru_last_visit');
+  const now=new Date().toDateString();
+  if(last!==now){vc++;localStorage.setItem('ru_visitors',vc);localStorage.setItem('ru_last_visit',now)}
+  document.getElementById('visitorCount').textContent=vc.toLocaleString();
+}
+
+function showBlogDetail(b){
+  let m=document.getElementById('blogDetailModal');
+  if(!m){m=document.createElement('div');m.id='blogDetailModal';m.className='modal-overlay';m.innerHTML='<div class="modal-box" style="max-width:680px"><div class="modal-header" style="position:relative"><button class="modal-close" onclick="closeModal(\'blogDetailModal\')">✕</button><h3 id="bdTitle"></h3><p id="bdMeta"></p></div><div class="modal-body"><div id="bdContent" style="font-size:0.92rem;line-height:1.8;color:#374151;white-space:pre-wrap"></div></div></div>';m.addEventListener('click',function(e){if(e.target===this)closeModal('blogDetailModal')});document.body.appendChild(m)}
+  document.getElementById('bdTitle').textContent=b.title;
+  document.getElementById('bdMeta').textContent=(b.date||'')+' · '+(b.author||'RootsUp Team')+' · '+(b.category||'');
+  document.getElementById('bdContent').textContent=b.content||b.excerpt||'';
+  openModal('blogDetailModal');
+}
+
+loadSiteData();
+</script>
+</body>
+</html>
